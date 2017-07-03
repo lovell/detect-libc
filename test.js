@@ -3,7 +3,7 @@
 const ava = require('ava');
 const proxyquire = require('proxyquire').noPreserveCache();
 
-ava('linux glibc', function (t) {
+ava.serial('linux glibc', function (t) {
   t.plan(2);
 
   const libc = proxyquire('./', {
@@ -26,7 +26,7 @@ ava('linux glibc', function (t) {
   t.is('1.23', libc.version);
 });
 
-ava('linux musl', function (t) {
+ava.serial('linux musl', function (t) {
   t.plan(2);
 
   const libc = proxyquire('./', {
@@ -52,7 +52,7 @@ ava('linux musl', function (t) {
   t.is('1.2.3', libc.version);
 });
 
-ava('darwin bsd', function (t) {
+ava.serial('darwin bsd', function (t) {
   t.plan(2);
 
   const libc = proxyquire('./', {
@@ -75,7 +75,7 @@ ava('darwin bsd', function (t) {
   t.is('1000.20.3', libc.version);
 });
 
-ava('darwin without otool', function (t) {
+ava.serial('darwin without otool', function (t) {
   t.plan(2);
 
   const libc = proxyquire('./', {
