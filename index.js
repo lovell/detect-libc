@@ -20,7 +20,7 @@ if (platform === 'linux') {
     if (ldd.status === 0) {
       if (ldd.stdout.indexOf('musl') !== -1) {
         family = 'musl';
-        version = ldd.stdout.split(/\n/)[1].trim().split(' ')[1];
+        version = ldd.stdout.split(/[\r\n]+/)[1].trim().split(/\s/)[1];
       }
     }
   }
@@ -29,7 +29,7 @@ if (platform === 'linux') {
   const otool = spawnSync('otool', ['-L', '/usr/lib/libc.dylib'], spawnOptions);
   if (otool.status === 0) {
     family = 'bsd';
-    version = otool.stdout.split(/\n/)[1].trim().split(' ')[6].replace(')', '');
+    version = otool.stdout.split(/[\r\n]+/)[1].trim().split(/\s/)[6].replace(')', '');
   }
 }
 

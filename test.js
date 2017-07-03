@@ -1,9 +1,11 @@
 'use strict';
 
 const ava = require('ava');
-const proxyquire = require('proxyquire').noPreserveCache();
+const proxyquire = require('proxyquire')
+  .noCallThru()
+  .noPreserveCache();
 
-ava.serial('linux glibc', function (t) {
+ava('linux glibc', function (t) {
   t.plan(2);
 
   const libc = proxyquire('./', {
@@ -26,7 +28,7 @@ ava.serial('linux glibc', function (t) {
   t.is('1.23', libc.version);
 });
 
-ava.serial('linux musl', function (t) {
+ava('linux musl', function (t) {
   t.plan(2);
 
   const libc = proxyquire('./', {
@@ -52,7 +54,7 @@ ava.serial('linux musl', function (t) {
   t.is('1.2.3', libc.version);
 });
 
-ava.serial('darwin bsd', function (t) {
+ava('darwin bsd', function (t) {
   t.plan(2);
 
   const libc = proxyquire('./', {
@@ -75,7 +77,7 @@ ava.serial('darwin bsd', function (t) {
   t.is('1000.20.3', libc.version);
 });
 
-ava.serial('darwin without otool', function (t) {
+ava('darwin without otool', function (t) {
   t.plan(2);
 
   const libc = proxyquire('./', {
