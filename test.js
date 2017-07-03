@@ -39,7 +39,7 @@ ava('linux musl', function (t) {
         }
       },
       spawnSync: function (command) {
-        return command.indexOf('getconf') !== -1 ? {
+        return command === 'getconf' ? {
           status: 64,
           stdout: 'getconf: GNU_LIBC_VERSION: unknown variable\n'
         } : {
