@@ -22,7 +22,8 @@ npm install detect-libc
 
 ### detect-libc command
 
-Command line tool that spawns the child `command` with the `LIBC` environment variable set to the value of the system libc family.
+Command line tool that spawns the child `command` with the `LIBC`
+environment variable set to the value of the system libc family.
 
 ### API
 
@@ -30,7 +31,7 @@ Command line tool that spawns the child `command` with the `LIBC` environment va
 const { family, version } = require('detect-libc');
 ```
 
-* `family` is a String containing the system's libc family.
+* `family` is a String representing the system's libc family.
 * `version` is a String representing the system's libc version.
 
 ## Integrating with prebuild
@@ -41,7 +42,7 @@ const { family, version } = require('detect-libc');
     "test": "mocha && detect-libc prebuild-ci"
   },
   "dependencies": {
-    "detect-libc": "^0.0.3",
+    "detect-libc": "^0.0.4",
     "prebuild-install": "^2.1.2"
   },
   "devDependencies": {
