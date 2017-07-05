@@ -10,7 +10,7 @@ Provides a value suitable for use with the `--libc` option of
 therefore allowing build and provision of pre-compiled binaries
 for musl-based Linux e.g. Alpine as well as glibc-based.
 
-Currently supports Linux (glibc, musl) and OS X (bsd).
+Currently supports libc detection on Linux (glibc, musl) and OS X (bsd).
 
 ## Install
 
@@ -37,13 +37,13 @@ const { family, version } = require('detect-libc');
 * `family` is a String containing the system's libc family.
 * `version` is a String representing the system's libc version.
 
-## Example package.json
+## Integrating with prebuild
 
 ```json
   "scripts": {
     "install": "prebuild-install --libc `detect-libc-family` || node-gyp rebuild",
     "test": "mocha && prebuild-ci --libc `detect-libc-family`"
-  ",
+  },
   "dependencies": {
     "detect-libc": "^0.0.3",
     "prebuild-install": "^2.1.2"
@@ -53,3 +53,17 @@ const { family, version } = require('detect-libc');
     "prebuild-ci": "^2.2.2"
   }
 ```
+
+## Licence
+
+Copyright 2017 Lovell Fuller
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at [http://www.apache.org/licenses/LICENSE-2.0](http://www.apache.org/licenses/LICENSE-2.0.html)
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
