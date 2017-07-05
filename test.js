@@ -32,12 +32,12 @@ ava('linux musl', function (t) {
   t.plan(2);
 
   const libc = proxyquire('./', {
+    os: {
+      platform: function () {
+        return 'linux';
+      }
+    },
     child_process: {
-      os: {
-        platform: function () {
-          return 'linux';
-        }
-      },
       spawnSync: function (command) {
         return command === 'getconf' ? {
           status: 64,
