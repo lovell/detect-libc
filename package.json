@@ -1,11 +1,10 @@
 {
   "name": "detect-libc",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Node.js module to detect the C standard library (libc) implementation family and version",
-  "main": "index.js",
+  "main": "lib/detect-libc.js",
   "bin": {
-    "detect-libc-family": "./cli-family.js",
-    "detect-libc-version": "./cli-version.js"
+    "detect-libc": "./bin/detect-libc.js"
   },
   "scripts": {
     "test": "semistandard && ava"
