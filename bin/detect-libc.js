@@ -10,4 +10,4 @@ if (family) {
   spawnOptions.env.LIBC = family;
 }
 
-spawnSync(process.argv[2], process.argv.slice(3), spawnOptions);
+process.exit(spawnSync(process.argv[2], process.argv.slice(3), spawnOptions).status);

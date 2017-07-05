@@ -42,7 +42,7 @@ const { family, version } = require('detect-libc');
     "test": "mocha && detect-libc prebuild-ci"
   },
   "dependencies": {
-    "detect-libc": "^0.0.4",
+    "detect-libc": "^0.0.5",
     "prebuild-install": "^2.1.2"
   },
   "devDependencies": {
