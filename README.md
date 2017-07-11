@@ -1,7 +1,7 @@
 # detect-libc
 
 Node.js module to detect the C standard library (libc) implementation
-family and version in use on a given system.
+family and version in use on a given Linux system.
 
 Provides a value suitable for use with the `libc` option of
 [prebuild](https://www.npmjs.com/package/prebuild),
@@ -10,7 +10,7 @@ Provides a value suitable for use with the `libc` option of
 therefore allowing build and provision of pre-compiled binaries
 for musl-based Linux e.g. Alpine as well as glibc-based.
 
-Currently supports libc detection on Linux (glibc, musl) and OS X (bsd).
+Currently supports libc detection of glibc and musl.
 
 ## Install
 
@@ -42,7 +42,7 @@ const { family, version } = require('detect-libc');
     "test": "mocha && detect-libc prebuild-ci"
   },
   "dependencies": {
-    "detect-libc": "^0.0.5",
+    "detect-libc": "^0.0.6",
     "prebuild-install": "^2.1.2"
   },
   "devDependencies": {

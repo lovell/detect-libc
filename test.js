@@ -5,7 +5,7 @@ const proxyquire = require('proxyquire')
   .noCallThru()
   .noPreserveCache();
 
-ava('linux glibc', function (t) {
+ava('linux glibc is detected', function (t) {
   t.plan(2);
 
   const libc = proxyquire('./', {
@@ -28,7 +28,7 @@ ava('linux glibc', function (t) {
   t.is('1.23', libc.version);
 });
 
-ava('linux musl', function (t) {
+ava('linux musl is detected', function (t) {
   t.plan(2);
 
   const libc = proxyquire('./', {
@@ -54,44 +54,28 @@ ava('linux musl', function (t) {
   t.is('1.2.3', libc.version);
 });
 
-ava('darwin bsd', function (t) {
+ava('darwin is ignored', function (t) {
   t.plan(2);
 
   const libc = proxyquire('./', {
     os: {
       platform: function () {
         return 'darwin';
-      }
-    },
-    child_process: {
-      spawnSync: function () {
-        return {
-          status: 0,
-          stdout: '/usr/lib/libc.dylib:\n  /usr/lib/libSystem.B.dylib (compatibility version 1.0.0, current version 1000.20.3)\n...'
-        };
       }
     }
   });
 
-  t.is('bsd', libc.family);
-  t.is('1000.20.3', libc.version);
+  t.is('', libc.family);
+  t.is('', libc.version);
 });
 
-ava('darwin without otool', function (t) {
+ava('win32 is ignored', function (t) {
   t.plan(2);
 
   const libc = proxyquire('./', {
     os: {
       platform: function () {
-        return 'darwin';
-      }
-    },
-    child_process: {
-      spawnSync: function () {
-        return {
-          status: 127,
-          stdout: '-bash: otool: command not found'
-        };
+        return 'win32';
       }
     }
   });
