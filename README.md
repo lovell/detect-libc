@@ -3,14 +3,14 @@
 Node.js module to detect the C standard library (libc) implementation
 family and version in use on a given Linux system.
 
-Provides a value suitable for use with the `libc` option of
+Provides a value suitable for use with the `LIBC` option of
 [prebuild](https://www.npmjs.com/package/prebuild),
 [prebuild-ci](https://www.npmjs.com/package/prebuild-ci) and
 [prebuild-install](https://www.npmjs.com/package/prebuild-install),
 therefore allowing build and provision of pre-compiled binaries
 for musl-based Linux e.g. Alpine as well as glibc-based.
 
-Currently supports libc detection of glibc and musl.
+Currently supports libc detection of `glibc` and `musl`.
 
 ## Install
 
@@ -22,8 +22,9 @@ npm install detect-libc
 
 ### detect-libc command
 
-Command line tool that spawns the child `command` with the `LIBC`
-environment variable set to the value of the system libc family.
+Command line tool that spawns the child `command`.
+When run on a Linux platform the `LIBC` environment variable
+will be set to the value of the system libc family.
 
 ### API
 
