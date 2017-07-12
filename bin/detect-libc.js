@@ -11,7 +11,7 @@ const spawnOptions = {
   stdio: 'inherit'
 };
 
-if (family) {
+if (family && family !== 'glibc') {
   spawnOptions.env.LIBC = process.env.LIBC || family;
 }
 
