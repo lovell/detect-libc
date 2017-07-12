@@ -1,6 +1,6 @@
 {
   "name": "detect-libc",
-  "version": "0.0.8",
+  "version": "0.1.0",
   "description": "Node.js module to detect the C standard library (libc) implementation family and version",
   "main": "lib/detect-libc.js",
   "bin": {
