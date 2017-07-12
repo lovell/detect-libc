@@ -6,7 +6,7 @@ const proxyquire = require('proxyquire')
   .noPreserveCache();
 
 ava('linux glibc is detected', function (t) {
-  t.plan(2);
+  t.plan(5);
 
   const libc = proxyquire('./', {
     os: {
@@ -24,12 +24,15 @@ ava('linux glibc is detected', function (t) {
     }
   });
 
-  t.is('glibc', libc.family);
+  t.is('glibc', libc.GLIBC);
+  t.is('musl', libc.MUSL);
+  t.is(libc.GLIBC, libc.family);
   t.is('1.23', libc.version);
+  t.false(libc.isNonGlibcLinux);
 });
 
 ava('linux musl is detected', function (t) {
-  t.plan(2);
+  t.plan(5);
 
   const libc = proxyquire('./', {
     os: {
@@ -50,12 +53,15 @@ ava('linux musl is detected', function (t) {
     }
   });
 
-  t.is('musl', libc.family);
+  t.is('glibc', libc.GLIBC);
+  t.is('musl', libc.MUSL);
+  t.is(libc.MUSL, libc.family);
   t.is('1.2.3', libc.version);
+  t.true(libc.isNonGlibcLinux);
 });
 
 ava('darwin is ignored', function (t) {
-  t.plan(2);
+  t.plan(5);
 
   const libc = proxyquire('./', {
     os: {
@@ -65,12 +71,15 @@ ava('darwin is ignored', function (t) {
     }
   });
 
+  t.is('glibc', libc.GLIBC);
+  t.is('musl', libc.MUSL);
   t.is('', libc.family);
   t.is('', libc.version);
+  t.false(libc.isNonGlibcLinux);
 });
 
 ava('win32 is ignored', function (t) {
-  t.plan(2);
+  t.plan(5);
 
   const libc = proxyquire('./', {
     os: {
@@ -80,6 +89,9 @@ ava('win32 is ignored', function (t) {
     }
   });
 
+  t.is('glibc', libc.GLIBC);
+  t.is('musl', libc.MUSL);
   t.is('', libc.family);
   t.is('', libc.version);
+  t.false(libc.isNonGlibcLinux);
 });

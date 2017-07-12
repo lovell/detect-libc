@@ -3,7 +3,7 @@
 'use strict';
 
 const spawnSync = require('child_process').spawnSync;
-const family = require('../').family;
+const libc = require('../');
 
 const spawnOptions = {
   env: process.env,
@@ -11,8 +11,8 @@ const spawnOptions = {
   stdio: 'inherit'
 };
 
-if (family && family !== 'glibc') {
-  spawnOptions.env.LIBC = process.env.LIBC || family;
+if (libc.isNonGlibcLinux) {
+  spawnOptions.env.LIBC = process.env.LIBC || libc.family;
 }
 
 process.exit(spawnSync(process.argv[2], process.argv.slice(3), spawnOptions).status);

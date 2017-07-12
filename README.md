@@ -23,11 +23,14 @@ npm install detect-libc
 ### API
 
 ```js
-const { family, version } = require('detect-libc');
+const { GLIBC, MUSL, family, version, isNonGlibcLinux } = require('detect-libc');
 ```
 
-* `family` is a String representing the system's libc family.
-* `version` is a String representing the system's libc version.
+* `GLIBC` is a String containing the value "glibc" for comparison with `family`.
+* `MUSL` is a String containing the value "musl" for comparison with `family`.
+* `family` is a String representing the system libc family.
+* `version` is a String representing the system libc version number.
+* `isNonGlibcLinux` is a Boolean representing whether the system is a non-glibc Linux, e.g. Alpine.
 
 ### detect-libc command line tool
 
@@ -49,7 +52,7 @@ detect-libc child-command
     "test": "mocha && detect-libc prebuild-ci"
   },
   "dependencies": {
-    "detect-libc": "^0.0.7",
+    "detect-libc": "^0.0.8",
     "prebuild-install": "^2.2.0"
   },
   "devDependencies": {
