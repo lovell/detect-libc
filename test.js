@@ -95,3 +95,115 @@ ava('win32 is ignored', function (t) {
   t.is('', libc.version);
   t.false(libc.isNonGlibcLinux);
 });
+
+ava('Linux detect glibc from filesystem', function (t) {
+  t.plan(5);
+
+  const libc = proxyquire('./', {
+    os: {
+      platform: function () {
+        return 'linux';
+      }
+    },
+    child_process: {
+      spawnSync: function () {
+        return { status: -1 };
+      }
+    },
+    fs: {
+      readdirSync: function () {
+        return ['init', 'modprobe.d', 'modules', 'resolvconf', 'systemd', 'udev', 'x86_64-linux-gnu', 'xtables'];
+      }
+    }
+  });
+
+  t.is('glibc', libc.GLIBC);
+  t.is('musl', libc.MUSL);
+  t.is(libc.GLIBC, libc.family);
+  t.is('', libc.version);
+  t.false(libc.isNonGlibcLinux);
+});
+
+ava('Linux detect musl from filesystem', function (t) {
+  t.plan(5);
+
+  const libc = proxyquire('./', {
+    os: {
+      platform: function () {
+        return 'linux';
+      }
+    },
+    child_process: {
+      spawnSync: function () {
+        return { status: -1 };
+      }
+    },
+    fs: {
+      readdirSync: function () {
+        return ['apk', 'firmware', 'ld-musl-x86_64.so.1', 'libc.musl-x86_64.so.1', 'libz.so.1', 'libz.so.1.2.11', 'mdev'];
+      }
+    }
+  });
+
+  t.is('glibc', libc.GLIBC);
+  t.is('musl', libc.MUSL);
+  t.is(libc.MUSL, libc.family);
+  t.is('', libc.version);
+  t.true(libc.isNonGlibcLinux);
+});
+
+ava('NodeOS detect musl from filesystem', function (t) {
+  t.plan(5);
+
+  const libc = proxyquire('./', {
+    os: {
+      platform: function () {
+        return 'linux';
+      }
+    },
+    child_process: {
+      spawnSync: function () {
+        return { status: -1 };
+      }
+    },
+    fs: {
+      readdirSync: function () {
+        return ['ld-musl-x86_64.so.1', 'libc.so', 'libfuse.so', 'libfuse.so.2', 'libfuse.so.2.9.7', 'libgcc_s.so.1', 'libstdc++.so.6', 'libstdc++.so.6.0.21', 'node_modules'];
+      }
+    }
+  });
+
+  t.is('glibc', libc.GLIBC);
+  t.is('musl', libc.MUSL);
+  t.is(libc.MUSL, libc.family);
+  t.is('', libc.version);
+  t.true(libc.isNonGlibcLinux);
+});
+
+ava('Linux fail to detect from filesystem', function (t) {
+  t.plan(5);
+
+  const libc = proxyquire('./', {
+    os: {
+      platform: function () {
+        return 'linux';
+      }
+    },
+    child_process: {
+      spawnSync: function () {
+        return { status: -1 };
+      }
+    },
+    fs: {
+      readdirSync: function () {
+        return [];
+      }
+    }
+  });
+
+  t.is('glibc', libc.GLIBC);
+  t.is('musl', libc.MUSL);
+  t.is('', libc.family);
+  t.is('', libc.version);
+  t.false(libc.isNonGlibcLinux);
+});
