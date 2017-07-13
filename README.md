@@ -52,7 +52,7 @@ detect-libc child-command
     "test": "mocha && detect-libc prebuild-ci"
   },
   "dependencies": {
-    "detect-libc": "^0.0.8",
+    "detect-libc": "^0.2.0",
     "prebuild-install": "^2.2.0"
   },
   "devDependencies": {
