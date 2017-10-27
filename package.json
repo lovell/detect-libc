@@ -1,6 +1,6 @@
 {
   "name": "detect-libc",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "description": "Node.js module to detect the C standard library (libc) implementation family and version",
   "main": "lib/detect-libc.js",
   "bin": {
@@ -21,12 +21,12 @@
   "author": "Lovell Fuller <npm@lovell.info>",
   "license": "Apache-2.0",
   "devDependencies": {
-    "ava": "^0.20.0",
-    "nyc": "^11.0.3",
+    "ava": "^0.23.0",
+    "nyc": "^11.2.1",
     "proxyquire": "^1.8.0",
     "semistandard": "^11.0.0"
   },
   "engines": {
-    "node": ">=4"
+    "node": ">=0.10"
   }
 }

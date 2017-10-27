@@ -4,6 +4,16 @@ matrix:
     - os: linux
       dist: trusty
       sudo: false
+      node_js: "0.10"
+      script: node -e 'require("assert").strictEqual(false, require("./").isNonGlibcLinux)'
+    - os: linux
+      dist: trusty
+      sudo: false
+      node_js: "0.12"
+      script: node -e 'require("assert").strictEqual(false, require("./").isNonGlibcLinux)'
+    - os: linux
+      dist: trusty
+      sudo: false
       node_js: "4"
     - os: linux
       dist: trusty

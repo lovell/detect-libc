@@ -2,10 +2,10 @@
 
 'use strict';
 
-const spawnSync = require('child_process').spawnSync;
-const libc = require('../');
+var spawnSync = require('child_process').spawnSync;
+var libc = require('../');
 
-const spawnOptions = {
+var spawnOptions = {
   env: process.env,
   shell: true,
   stdio: 'inherit'
