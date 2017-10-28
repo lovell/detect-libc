@@ -31,7 +31,7 @@ ava('linux glibc is detected', function (t) {
   t.false(libc.isNonGlibcLinux);
 });
 
-ava('linux musl is detected', function (t) {
+ava('linux musl is detected via ldd exit 0', function (t) {
   t.plan(5);
 
   const libc = proxyquire('./', {
@@ -48,6 +48,35 @@ ava('linux musl is detected', function (t) {
         } : {
           status: 0,
           stdout: 'musl libc (x86_64)\nVersion 1.2.3\nDynamic Program Loader\nUsage: ldd [options] [--] pathname'
+        };
+      }
+    }
+  });
+
+  t.is('glibc', libc.GLIBC);
+  t.is('musl', libc.MUSL);
+  t.is(libc.MUSL, libc.family);
+  t.is('1.2.3', libc.version);
+  t.true(libc.isNonGlibcLinux);
+});
+
+ava('linux musl is detected via ldd exit 1', function (t) {
+  t.plan(5);
+
+  const libc = proxyquire('./', {
+    os: {
+      platform: function () {
+        return 'linux';
+      }
+    },
+    child_process: {
+      spawnSync: function (command) {
+        return command === 'getconf' ? {
+          status: 64,
+          stdout: 'getconf: GNU_LIBC_VERSION: unknown variable\n'
+        } : {
+          status: 1,
+          stderr: 'musl libc (x86_64)\nVersion 1.2.3\nDynamic Program Loader\nUsage: ldd [options] [--] pathname'
         };
       }
     }
