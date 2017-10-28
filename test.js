@@ -6,7 +6,7 @@ const proxyquire = require('proxyquire')
   .noPreserveCache();
 
 ava('linux glibc is detected', function (t) {
-  t.plan(5);
+  t.plan(6);
 
   const libc = proxyquire('./', {
     os: {
@@ -28,11 +28,12 @@ ava('linux glibc is detected', function (t) {
   t.is('musl', libc.MUSL);
   t.is(libc.GLIBC, libc.family);
   t.is('1.23', libc.version);
+  t.is('getconf', libc.method);
   t.false(libc.isNonGlibcLinux);
 });
 
 ava('linux musl is detected via ldd exit 0', function (t) {
-  t.plan(5);
+  t.plan(6);
 
   const libc = proxyquire('./', {
     os: {
@@ -57,11 +58,12 @@ ava('linux musl is detected via ldd exit 0', function (t) {
   t.is('musl', libc.MUSL);
   t.is(libc.MUSL, libc.family);
   t.is('1.2.3', libc.version);
+  t.is('ldd', libc.method);
   t.true(libc.isNonGlibcLinux);
 });
 
 ava('linux musl is detected via ldd exit 1', function (t) {
-  t.plan(5);
+  t.plan(6);
 
   const libc = proxyquire('./', {
     os: {
@@ -86,11 +88,12 @@ ava('linux musl is detected via ldd exit 1', function (t) {
   t.is('musl', libc.MUSL);
   t.is(libc.MUSL, libc.family);
   t.is('1.2.3', libc.version);
+  t.is('ldd', libc.method);
   t.true(libc.isNonGlibcLinux);
 });
 
 ava('darwin is ignored', function (t) {
-  t.plan(5);
+  t.plan(6);
 
   const libc = proxyquire('./', {
     os: {
@@ -104,11 +107,12 @@ ava('darwin is ignored', function (t) {
   t.is('musl', libc.MUSL);
   t.is('', libc.family);
   t.is('', libc.version);
+  t.is('', libc.method);
   t.false(libc.isNonGlibcLinux);
 });
 
 ava('win32 is ignored', function (t) {
-  t.plan(5);
+  t.plan(6);
 
   const libc = proxyquire('./', {
     os: {
@@ -122,11 +126,12 @@ ava('win32 is ignored', function (t) {
   t.is('musl', libc.MUSL);
   t.is('', libc.family);
   t.is('', libc.version);
+  t.is('', libc.method);
   t.false(libc.isNonGlibcLinux);
 });
 
 ava('Linux detect glibc from filesystem', function (t) {
-  t.plan(5);
+  t.plan(6);
 
   const libc = proxyquire('./', {
     os: {
@@ -150,11 +155,12 @@ ava('Linux detect glibc from filesystem', function (t) {
   t.is('musl', libc.MUSL);
   t.is(libc.GLIBC, libc.family);
   t.is('', libc.version);
+  t.is('filesystem', libc.method);
   t.false(libc.isNonGlibcLinux);
 });
 
 ava('Linux detect musl from filesystem', function (t) {
-  t.plan(5);
+  t.plan(6);
 
   const libc = proxyquire('./', {
     os: {
@@ -178,11 +184,12 @@ ava('Linux detect musl from filesystem', function (t) {
   t.is('musl', libc.MUSL);
   t.is(libc.MUSL, libc.family);
   t.is('', libc.version);
+  t.is('filesystem', libc.method);
   t.true(libc.isNonGlibcLinux);
 });
 
 ava('NodeOS detect musl from filesystem', function (t) {
-  t.plan(5);
+  t.plan(6);
 
   const libc = proxyquire('./', {
     os: {
@@ -206,11 +213,12 @@ ava('NodeOS detect musl from filesystem', function (t) {
   t.is('musl', libc.MUSL);
   t.is(libc.MUSL, libc.family);
   t.is('', libc.version);
+  t.is('filesystem', libc.method);
   t.true(libc.isNonGlibcLinux);
 });
 
 ava('Linux fail to detect from filesystem', function (t) {
-  t.plan(5);
+  t.plan(6);
 
   const libc = proxyquire('./', {
     os: {
@@ -234,5 +242,6 @@ ava('Linux fail to detect from filesystem', function (t) {
   t.is('musl', libc.MUSL);
   t.is('', libc.family);
   t.is('', libc.version);
+  t.is('', libc.method);
   t.false(libc.isNonGlibcLinux);
 });
