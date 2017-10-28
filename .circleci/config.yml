@@ -1,0 +1,15 @@
+version: 2
+jobs:
+  build:
+    machine: true
+    #branches:
+      #only:
+      #  - master
+    steps:
+      - checkout
+      - run:
+          name: Prepare test images
+          command: ./tests/integration/prepare-images.sh
+      - run:
+          name: Executing integration tests
+          command: ./tests/integration/run-tests.sh --simple
