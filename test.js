@@ -130,7 +130,7 @@ ava('win32 is ignored', function (t) {
   t.false(libc.isNonGlibcLinux);
 });
 
-ava('Linux detect glibc from filesystem', function (t) {
+ava('Linux detect glibc from /lib filesystem', function (t) {
   t.plan(6);
 
   const libc = proxyquire('./', {
@@ -147,6 +147,35 @@ ava('Linux detect glibc from filesystem', function (t) {
     fs: {
       readdirSync: function () {
         return ['init', 'modprobe.d', 'modules', 'resolvconf', 'systemd', 'udev', 'x86_64-linux-gnu', 'xtables'];
+      }
+    }
+  });
+
+  t.is('glibc', libc.GLIBC);
+  t.is('musl', libc.MUSL);
+  t.is(libc.GLIBC, libc.family);
+  t.is('', libc.version);
+  t.is('filesystem', libc.method);
+  t.false(libc.isNonGlibcLinux);
+});
+
+ava('Linux detect glibc from /usr filesystem', function (t) {
+  t.plan(6);
+
+  const libc = proxyquire('./', {
+    os: {
+      platform: function () {
+        return 'linux';
+      }
+    },
+    child_process: {
+      spawnSync: function () {
+        return { status: -1 };
+      }
+    },
+    fs: {
+      readdirSync: function (path) {
+        return path === '/usr/sbin' ? ['glibc-post-wrapper'] : [];
       }
     }
   });
