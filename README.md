@@ -32,9 +32,6 @@ const { GLIBC, MUSL, family, version, isNonGlibcLinux } = require('detect-libc')
 * `version` is a String representing the system libc version number.
 * `isNonGlibcLinux` is a Boolean representing whether the system is a non-glibc Linux, e.g. Alpine.
 
-This feature will always return `false` for `isNonGlibcLinux`
-on versions of Node prior to v0.12 as `spawnSync` is unavailable.
-
 ### detect-libc command line tool
 
 When run on a Linux system with a non-glibc libc,
@@ -43,7 +40,7 @@ set to the relevant value.
 
 On all other platforms will run the child command as-is.
 
-This feature requires `spawnSync` provided by Node v0.12+.
+The command line feature requires `spawnSync` provided by Node v0.12+.
 
 ```sh
 detect-libc child-command
@@ -57,7 +54,7 @@ detect-libc child-command
     "test": "mocha && detect-libc prebuild-ci"
   },
   "dependencies": {
-    "detect-libc": "^0.2.0",
+    "detect-libc": "^1.0.2",
     "prebuild-install": "^2.2.0"
   },
   "devDependencies": {
