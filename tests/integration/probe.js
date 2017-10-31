@@ -1,10 +1,11 @@
 var fs = require('fs');
 var libc = require('../../lib/detect-libc.js');
 
-console.log('Family: ' + (libc.family || 'unknown'));
-console.log('Version: ' + (libc.version || 'unknown'));
-console.log('Method: ' + (libc.method || 'unknown'));
-console.log('NodeJS: ' + process.versions.node);
+var result = { };
+result['libc.family'] = libc.family || 'unknown';
+result['libc.version'] = libc.version || 'unknown';
+result['detect.method'] = libc.method || 'unknown';
+result['node.version'] = process.versions.node;
 
 var osRelease =
   (fs.existsSync('/etc/os-release')
@@ -19,4 +20,6 @@ var osRelease =
       return obj;
     }, { });
 
-console.log('Distribution: ' + (osRelease.PRETTY_NAME || 'unknown'));
+result['dist.name'] = osRelease.PRETTY_NAME || 'unknown';
+
+console.log('result=' + JSON.stringify(result));
