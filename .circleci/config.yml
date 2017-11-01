@@ -6,10 +6,13 @@ jobs:
       #only:
       #  - master
     steps:
+      - run:
+          name: Install required tools
+          command: pip install prettytable
       - checkout
       - run:
-          name: Prepare test images
-          command: ./tests/integration/prepare-images.sh
+          name: Pull test images (if possible)
+          command: ./tests/integration/test.py pull || true
       - run:
-          name: Executing integration tests
-          command: ./tests/integration/run-tests.sh --simple
+          name: Run integration tests
+          command: ./tests/integration/test.py run

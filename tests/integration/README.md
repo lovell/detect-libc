@@ -1,13 +1,19 @@
 # Requirements
 
-The following programs are required to run the integration tests successfully.
+The following tools are required to run the integration tests successfully.
 
-* Basics: bash, column, grep, less
+* Python 2.7, prettytable (`pip install prettytable`)
 * Docker
 
 # Usage
 
 ```sh
-./prepare-images.sh
-./run-tests.sh
+# prepare images (e.g. on dev machine)
+./test.py build
+./test.py push
+# execute tests (e.g. within CI)
+./test.py pull
+./test.py run
+# help
+./test.py -h
 ```
