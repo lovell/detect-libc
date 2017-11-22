@@ -133,5 +133,14 @@
       "4.x": { "$detect.method": "getconf" }
     },
     "$libc.family": "glibc"
+  },
+
+  "minimal": {
+    "dist": {
+      "rmg": { "$detect.method": "filesystem", "$libc.family": "glibc", "$libc.version": "unknown", "$dist.name": "unknown", "$node.version": "8.8.1" }
+    },
+    "node": {
+      "8.x": { }
+    }
   }
 }
