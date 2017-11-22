@@ -274,3 +274,30 @@ ava('Linux fail to detect from filesystem', function (t) {
   t.is('', libc.method);
   t.false(libc.isNonGlibcLinux);
 });
+
+ava('Linux minimal, without spawnSync or /usr/sbin', function (t) {
+  t.plan(6);
+
+  const libc = proxyquire('./', {
+    os: {
+      platform: function () {
+        return 'linux';
+      }
+    },
+    child_process: {
+      spawnSync: undefined
+    },
+    fs: {
+      readdirSync: function () {
+        throw new Error();
+      }
+    }
+  });
+
+  t.is('glibc', libc.GLIBC);
+  t.is('musl', libc.MUSL);
+  t.is('', libc.family);
+  t.is('', libc.version);
+  t.is('', libc.method);
+  t.false(libc.isNonGlibcLinux);
+});
