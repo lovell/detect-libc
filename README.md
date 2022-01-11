@@ -1,16 +1,14 @@
 # detect-libc
 
-Node.js module to detect the C standard library (libc) implementation
-family and version in use on a given Linux system.
+Node.js module to detect details of the C standard library (libc)
+implementation provided by a given Linux system at runtime.
 
-Provides a value suitable for use with the `LIBC` option of
-[prebuild](https://www.npmjs.com/package/prebuild),
-[prebuild-ci](https://www.npmjs.com/package/prebuild-ci) and
-[prebuild-install](https://www.npmjs.com/package/prebuild-install),
-therefore allowing build and provision of pre-compiled binaries
-for musl-based Linux e.g. Alpine as well as glibc-based.
+Provides asychronous and synchronous functions for the
+family (e.g. `glibc`, `musl`) and version (e.g. `1.23`, `1.2.3`).
+Currently supports detection of GNU glibc and MUSL libc.
 
-Currently supports libc detection of `glibc` and `musl`.
+For previous v1.x releases, please see the
+[v1](https://github.com/lovell/detect-libc/tree/v1) branch.
 
 ## Install
 
@@ -18,54 +16,153 @@ Currently supports libc detection of `glibc` and `musl`.
 npm install detect-libc
 ```
 
-## Usage
+## API
 
-### API
+### GLIBC
+
+```ts
+const GLIBC: string = 'glibc';
+```
+
+A String constant containing the value `glibc`.
+
+### MUSL
+
+```ts
+const MUSL: string = 'musl';
+```
+
+A String constant containing the value `musl`.
+
+### family
+
+```ts
+function family(): Promise<string | null>;
+```
+
+Resolves asychronously with:
+
+* `glibc` or `musl` when the libc family can be determined
+* `null` when the libc family cannot be determined
+* `null` when run on a non-Linux platform
 
 ```js
-const { GLIBC, MUSL, family, version, isNonGlibcLinux } = require('detect-libc');
+const { family, GLIBC, MUSL } = require('detect-libc');
+
+switch (await family()) {
+  case GLIBC: ...
+  case MUSL: ...
+  case null: ...
+}
 ```
 
-* `GLIBC` is a String containing the value "glibc" for comparison with `family`.
-* `MUSL` is a String containing the value "musl" for comparison with `family`.
-* `family` is a String representing the system libc family.
-* `version` is a String representing the system libc version number.
-* `isNonGlibcLinux` is a Boolean representing whether the system is a non-glibc Linux, e.g. Alpine.
+### familySync
 
-### detect-libc command line tool
+```ts
+function familySync(): string | null;
+```
 
-When run on a Linux system with a non-glibc libc,
-the child command will be run with the `LIBC` environment variable
-set to the relevant value.
+Synchronous version of `family()`.
 
-On all other platforms will run the child command as-is.
+```js
+const { familySync, GLIBC, MUSL } = require('detect-libc');
 
-The command line feature requires `spawnSync` provided by Node v0.12+.
+switch (familySync()) {
+  case GLIBC: ...
+  case MUSL: ...
+  case null: ...
+}
+```
+
+### version
+
+```ts
+function version(): Promise<string | null>;
+```
+
+Resolves asychronously with:
+
+* The version when it can be determined
+* `null` when the libc family cannot be determined
+* `null` when run on a non-Linux platform
+
+```js
+const { version } = require('detect-libc');
+
+const v = await version();
+if (v) {
+  const [major, minor, patch] = v.split('.');
+}
+```
+
+### versionSync
+
+```ts
+function versionSync(): string | null;
+```
+
+Synchronous version of `version()`.
+
+```js
+const { versionSync } = require('detect-libc');
+
+const v = versionSync();
+if (v) {
+  const [major, minor, patch] = v.split('.');
+}
+```
+
+### isNonGlibcLinux
+
+```ts
+function isNonGlibcLinux(): Promise<boolean>;
+```
+
+Resolves asychronously with:
+
+* `false` when the libc family is `glibc`
+* `true` when the libc family is not `glibc`
+* `false` when run on a non-Linux platform
+
+```js
+const { isNonGlibcLinux } = require('detect-libc');
+
+if (await isNonGlibcLinux()) { ... }
+```
+
+### isNonGlibcLinuxSync
+
+```ts
+function isNonGlibcLinuxSync(): boolean;
+```
+
+Synchronous version of `isNonGlibcLinux()`.
+
+```js
+const { isNonGlibcLinuxSync } = require('detect-libc');
+
+if (isNonGlibcLinuxSync()) { ... }
+```
+
+## CLI
+
+Prints a summary of libc family and version.
+
+Can be run via the command line using `npx` or `yarn dlx`.
 
 ```sh
-detect-libc child-command
+$ npx detect-libc
+glibc 1.23
 ```
 
-## Integrating with prebuild
-
-```json
-  "scripts": {
-    "install": "detect-libc prebuild-install || node-gyp rebuild",
-    "test": "mocha && detect-libc prebuild-ci"
-  },
-  "dependencies": {
-    "detect-libc": "^1.0.2",
-    "prebuild-install": "^2.2.0"
-  },
-  "devDependencies": {
-    "prebuild": "^6.2.1",
-    "prebuild-ci": "^2.2.3"
-  }
+```sh
+$ yarn dlx detect-libc
+musl 1.2.3
 ```
 
-## Licence
+## Licensing
 
-Copyright 2017 Lovell Fuller
+Copyright 2017, 2022 Lovell Fuller
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

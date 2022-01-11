@@ -1,0 +1,172 @@
+name: Integration tests
+on:
+  - push
+  - pull_request
+jobs:
+  unit:
+    name: ${{ matrix.name }}
+    container: ${{ matrix.container }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: Alpine 3.11 / Node.js 8
+            container: node:8-alpine3.11
+            node-version: 8
+            expected-family: musl
+            expected-version: 1.1.24
+          - name: Alpine 3.11 / Node.js 16
+            container: node:16-alpine3.11
+            node-version: 16
+            expected-family: musl
+            expected-version: 1.1.24
+          - name: Alpine 3.12 / Node.js 12
+            container: node:12-alpine3.12
+            node-version: 12
+            expected-family: musl
+            expected-version: 1.1.24
+          - name: Alpine 3.15 / Node.js 16
+            container: node:16-alpine3.15
+            node-version: 16
+            expected-family: musl
+            expected-version: 1.2.2
+          - name: Amazon 1 / Node.js 8
+            container: amazonlinux:1
+            node-version: 8
+            expected-family: glibc
+            expected-version: 2.17
+          - name: Amazon 1 / Node.js 16
+            container: amazonlinux:1
+            node-version: 16
+            expected-family: glibc
+            expected-version: 2.17
+          - name: Amazon 2 / Node.js 10
+            container: amazonlinux:2
+            node-version: 10
+            expected-family: glibc
+            expected-version: 2.26
+          - name: Amazon 2 / Node.js 16
+            container: amazonlinux:2
+            node-version: 16
+            expected-family: glibc
+            expected-version: 2.26
+          - name: CentOS 7 / Node.js 8
+            container: centos:centos7
+            node-version: 8
+            expected-family: glibc
+            expected-version: 2.17
+          - name: CentOS 7 / Node.js 16
+            container: centos:centos7
+            node-version: 16
+            expected-family: glibc
+            expected-version: 2.17
+          - name: CentOS 8 / Node.js 10
+            container: centos:centos8
+            node-version: 10
+            expected-family: glibc
+            expected-version: 2.28
+          - name: CentOS 8 / Node.js 16
+            container: centos:centos8
+            node-version: 16
+            expected-family: glibc
+            expected-version: 2.28
+          - name: Debian 9 / Node.js 8
+            container: node:8-stretch-slim
+            node-version: 8
+            expected-family: glibc
+            expected-version: 2.24
+          - name: Debian 9 / Node.js 16
+            container: node:16-stretch-slim
+            node-version: 16
+            expected-family: glibc
+            expected-version: 2.24
+          - name: Debian 10 / Node.js 8
+            container: node:8-buster-slim
+            node-version: 8
+            expected-family: glibc
+            expected-version: 2.28
+          - name: Debian 11 / Node.js 16
+            container: node:16-bullseye-slim
+            node-version: 16
+            expected-family: glibc
+            expected-version: 2.31
+          - name: Fedora 33 / Node.js 10
+            container: fedora:33
+            node-version: 10
+            expected-family: glibc
+            expected-version: 2.32
+          - name: Fedora 33 / Node.js 16
+            container: fedora:33
+            node-version: 16
+            expected-family: glibc
+            expected-version: 2.32
+          - name: Fedora 35 / Node.js 12
+            container: fedora:35
+            node-version: 12
+            expected-family: glibc
+            expected-version: 2.34
+          - name: Fedora 35 / Node.js 16
+            container: fedora:35
+            node-version: 16
+            expected-family: glibc
+            expected-version: 2.34
+          - name: OpenSUSE 15.1 / Node.js 10
+            container: opensuse/leap:15.1
+            node-version: 10
+            expected-family: glibc
+            expected-version: 2.26
+          - name: OpenSUSE 15.3 / Node.js 14
+            container: opensuse/leap:15.3
+            node-version: 14
+            expected-family: glibc
+            expected-version: 2.31
+          - name: Ubuntu 14.04 / Node.js 8
+            container: ubuntu:14.04
+            node-version: 8
+            expected-family: glibc
+            expected-version: 2.19
+          - name: Ubuntu 16.04 / Node.js 16
+            container: ubuntu:16.04
+            node-version: 16
+            expected-family: glibc
+            expected-version: 2.23
+          - name: Ubuntu 18.04 / Node.js 8
+            container: ubuntu:18.04
+            node-version: 8
+            expected-family: glibc
+            expected-version: 2.27
+          - name: Ubuntu 21.10 / Node.js 16
+            container: ubuntu:21.10
+            node-version: 16
+            expected-family: glibc
+            expected-version: 2.34
+    steps:
+      - name: Install Node.js (RHEL)
+        if: contains(matrix.container, 'amazonlinux') || contains(matrix.container, 'centos') || contains(matrix.container, 'fedora')
+        run: |
+          yum module disable -y nodejs || true
+          curl -sL https://rpm.nodesource.com/setup_${{ matrix.node-version }}.x | bash -
+          yum install -y git nodejs python2
+      - name: Install Node.js (OpenSUSE)
+        if: contains(matrix.container, 'opensuse')
+        run: |
+          zypper refresh
+          zypper --non-interactive install git nodejs${{ matrix.node-version }}
+      - name: Install Node.js (Ubuntu)
+        if: contains(matrix.container, 'ubuntu')
+        run: |
+          apt-get update
+          apt-get install -y curl git gnupg
+          curl -sL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add -
+          curl -sL https://deb.nodesource.com/setup_${{ matrix.node-version }}.x | bash -
+          apt-get install -y nodejs
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Verify expectations
+        run: |
+          export EXPECTED="${{ matrix.expected-family }} ${{ matrix.expected-version }}"
+          export ACTUAL="$(node ./bin/detect-libc.js)"
+          echo "Expected: $EXPECTED"
+          echo "Actual: $ACTUAL"
+          test "$ACTUAL" = "$EXPECTED"
