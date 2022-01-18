@@ -8,7 +8,7 @@ const proxyquire = require('proxyquire')
 test('constants', (t) => {
   t.plan(2);
 
-  const libc = require('../../');
+  const libc = require('../');
 
   t.is(libc.GLIBC, 'glibc');
   t.is(libc.MUSL, 'musl');
@@ -17,7 +17,7 @@ test('constants', (t) => {
 test('linux - glibc family and version detected via report', async (t) => {
   t.plan(6);
 
-  const libc = proxyquire('../../', {
+  const libc = proxyquire('../', {
     './process': {
       isLinux: () => true,
       getReport: () => ({
@@ -40,7 +40,7 @@ test('linux - glibc family and version detected via report', async (t) => {
 test('linux - musl family detected via report', async (t) => {
   t.plan(4);
 
-  const libc = proxyquire('../../', {
+  const libc = proxyquire('../', {
     './process': {
       isLinux: () => true,
       getReport: () => ({
@@ -60,7 +60,7 @@ test('linux - glibc family detected via child process', async (t) => {
   t.plan(4);
 
   const out = 'glibc 1.23\nldd (GLIBC) 1.23\nCopyright\netc';
-  const libc = proxyquire('../../', {
+  const libc = proxyquire('../', {
     './process': {
       isLinux: () => true,
       getReport: () => ({})
@@ -82,7 +82,7 @@ test('linux - musl family detected via child process', async (t) => {
   t.plan(4);
 
   const out = 'getconf: GNU_LIBC_VERSION: unknown variable\nmusl libc\nVersion 1.2.3\netc';
-  const libc = proxyquire('../../', {
+  const libc = proxyquire('../', {
     './process': {
       isLinux: () => true,
       getReport: () => ({
@@ -106,7 +106,7 @@ test('linux - unknown family', async (t) => {
   t.plan(4);
 
   const out = 'unknown';
-  const libc = proxyquire('../../', {
+  const libc = proxyquire('../', {
     './process': {
       isLinux: () => true,
       getReport: () => ({})
@@ -127,7 +127,7 @@ test('linux - unknown family', async (t) => {
 test('linux - unknown family (exec fails)', async (t) => {
   t.plan(4);
 
-  const libc = proxyquire('../../', {
+  const libc = proxyquire('../', {
     './process': {
       isLinux: () => true,
       getReport: () => ({})
@@ -148,7 +148,7 @@ test('linux - unknown family (exec fails)', async (t) => {
 test('non-linux - unknown family', async (t) => {
   t.plan(4);
 
-  const libc = proxyquire('../../', {
+  const libc = proxyquire('../', {
     './process': {
       isLinux: () => false
     }
@@ -167,7 +167,7 @@ test('linux - glibc version detected via child process', async (t) => {
   t.plan(2);
 
   const out = 'glibc 1.23\nldd (GLIBC) 1.23\nCopyright\netc';
-  const libc = proxyquire('../../', {
+  const libc = proxyquire('../', {
     './process': {
       isLinux: () => true,
       getReport: () => ({})
@@ -186,7 +186,7 @@ test('linux - musl version detected via child process', async (t) => {
   t.plan(2);
 
   const out = 'getconf: GNU_LIBC_VERSION: unknown variable\nmusl libc\nVersion 1.2.3\netc';
-  const libc = proxyquire('../../', {
+  const libc = proxyquire('../', {
     './process': {
       isLinux: () => true,
       getReport: () => ({})
@@ -205,7 +205,7 @@ test('linux - unknown version', async (t) => {
   t.plan(2);
 
   const out = 'unknown';
-  const libc = proxyquire('../../', {
+  const libc = proxyquire('../', {
     './process': {
       isLinux: () => true,
       getReport: () => ({})
@@ -223,7 +223,7 @@ test('linux - unknown version', async (t) => {
 test('linux - unknown version (exec fails)', async (t) => {
   t.plan(2);
 
-  const libc = proxyquire('../../', {
+  const libc = proxyquire('../', {
     './process': {
       isLinux: () => true,
       getReport: () => ({})
@@ -241,7 +241,7 @@ test('linux - unknown version (exec fails)', async (t) => {
 test('non-linux - unknown version', async (t) => {
   t.plan(2);
 
-  const libc = proxyquire('../../', {
+  const libc = proxyquire('../', {
     './process': {
       isLinux: () => false
     }
@@ -254,7 +254,7 @@ test('non-linux - unknown version', async (t) => {
 test('process (internal)', (t) => {
   t.plan(3);
 
-  const process = require('../../lib/process');
+  const process = require('../lib/process');
 
   t.is(typeof process.isLinux(), 'boolean');
   t.is(typeof process.getReport(), 'object');

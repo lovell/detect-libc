@@ -3,7 +3,7 @@ on:
   - push
   - pull_request
 jobs:
-  unit:
+  integration:
     name: ${{ matrix.name }}
     container: ${{ matrix.container }}
     runs-on: ubuntu-latest
@@ -166,7 +166,7 @@ jobs:
       - name: Verify expectations
         run: |
           export EXPECTED="${{ matrix.expected-family }} ${{ matrix.expected-version }}"
-          export ACTUAL="$(node ./bin/detect-libc.js)"
+          export ACTUAL="$(node ./test/integration.js)"
           echo "Expected: $EXPECTED"
           echo "Actual: $ACTUAL"
-          test "$ACTUAL" = "$EXPECTED"
+          test "$EXPECTED" = "$ACTUAL"

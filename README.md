@@ -1,11 +1,12 @@
 # detect-libc
 
 Node.js module to detect details of the C standard library (libc)
-implementation provided by a given Linux system at runtime.
+implementation provided by a given Linux system.
+
+Currently supports detection of GNU glibc and MUSL libc.
 
 Provides asychronous and synchronous functions for the
 family (e.g. `glibc`, `musl`) and version (e.g. `1.23`, `1.2.3`).
-Currently supports detection of GNU glibc and MUSL libc.
 
 For previous v1.x releases, please see the
 [v1](https://github.com/lovell/detect-libc/tree/v1) branch.
@@ -142,22 +143,6 @@ Synchronous version of `isNonGlibcLinux()`.
 const { isNonGlibcLinuxSync } = require('detect-libc');
 
 if (isNonGlibcLinuxSync()) { ... }
-```
-
-## CLI
-
-Prints a summary of libc family and version.
-
-Can be run via the command line using `npx` or `yarn dlx`.
-
-```sh
-$ npx detect-libc
-glibc 1.23
-```
-
-```sh
-$ yarn dlx detect-libc
-musl 1.2.3
 ```
 
 ## Licensing
