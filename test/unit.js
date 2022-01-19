@@ -56,8 +56,8 @@ test('linux - musl family detected via report', async (t) => {
   t.true(libc.isNonGlibcLinuxSync());
 });
 
-test('linux - glibc family detected via child process', async (t) => {
-  t.plan(4);
+test('linux - glibc family detected via async child process', async (t) => {
+  t.plan(2);
 
   const out = 'glibc 1.23\nldd (GLIBC) 1.23\nCopyright\netc';
   const libc = proxyquire('../', {
@@ -66,13 +66,27 @@ test('linux - glibc family detected via child process', async (t) => {
       getReport: () => ({})
     },
     child_process: {
-      exec: (_c, cb) => cb(null, out),
-      execSync: () => out
+      exec: (_c, cb) => cb(null, out)
     }
   });
 
   t.is(await libc.family(), libc.GLIBC);
   t.false(await libc.isNonGlibcLinux());
+});
+
+test('linux - glibc family detected via sync child process', async (t) => {
+  t.plan(2);
+
+  const out = 'glibc 1.23\nldd (GLIBC) 1.23\nCopyright\netc';
+  const libc = proxyquire('../', {
+    './process': {
+      isLinux: () => true,
+      getReport: () => ({})
+    },
+    child_process: {
+      execSync: () => out
+    }
+  });
 
   t.is(libc.familySync(), libc.GLIBC);
   t.false(libc.isNonGlibcLinuxSync());
