@@ -141,6 +141,16 @@ jobs:
             node-version: 16
             expected-family: glibc
             expected-version: 2.34
+          - name: Void glibc / Node.js 16
+            container: voidlinux/voidlinux
+            node-version: 16
+            expected-family: glibc
+            expected-version: 2.32
+          - name: Void musl / Node.js 16
+            container: voidlinux/voidlinux-musl
+            node-version: 16
+            expected-family: musl
+            expected-version: 1.1.24
     steps:
       - name: Install Node.js (RHEL)
         if: contains(matrix.container, 'amazonlinux') || contains(matrix.container, 'centos') || contains(matrix.container, 'fedora')
@@ -161,8 +171,11 @@ jobs:
           curl -sL https://deb.nodesource.com/gpgkey/nodesource.gpg.key | apt-key add -
           curl -sL https://deb.nodesource.com/setup_${{ matrix.node-version }}.x | bash -
           apt-get install -y nodejs
+      - name: Install Node.js (Void)
+        if: contains(matrix.container, 'void')
+        run: xbps-install -Sy git nodejs
       - name: Checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v1
       - name: Verify expectations
         run: |
           export EXPECTED="${{ matrix.expected-family }} ${{ matrix.expected-version }}"
