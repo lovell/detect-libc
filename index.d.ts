@@ -1,5 +1,5 @@
-export const GLIBC: string = 'glibc';
-export const MUSL: string = 'musl';
+export const GLIBC: 'glibc';
+export const MUSL: 'musl';
 
 export function family(): Promise<string | null>;
 export function familySync(): string | null;
