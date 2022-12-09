@@ -111,6 +111,11 @@ jobs:
             node-version: 16
             expected-family: glibc
             expected-version: 2.34
+          - name: Fedora 38 / Node.js 18
+            container: fedora:38
+            node-version: 18
+            expected-family: glibc
+            expected-version: 2.36.9000
           - name: OpenSUSE 15.1 / Node.js 10
             container: opensuse/leap:15.1
             node-version: 10
@@ -136,28 +141,31 @@ jobs:
             node-version: 8
             expected-family: glibc
             expected-version: 2.27
-          - name: Ubuntu 21.10 / Node.js 16
-            container: ubuntu:21.10
-            node-version: 16
+          - name: Ubuntu 22.04 / Node.js 18
+            container: ubuntu:22.04
+            node-version: 18
             expected-family: glibc
-            expected-version: 2.34
+            expected-version: 2.35
           - name: Void glibc / Node.js 16
-            container: voidlinux/voidlinux
+            container: ghcr.io/void-linux/void-linux:latest-thin-x86_64
             node-version: 16
             expected-family: glibc
             expected-version: 2.32
           - name: Void musl / Node.js 16
-            container: voidlinux/voidlinux-musl
+            container: ghcr.io/void-linux/void-linux:latest-thin-x86_64-musl
             node-version: 16
             expected-family: musl
             expected-version: 1.1.24
     steps:
       - name: Install Node.js (RHEL)
-        if: contains(matrix.container, 'amazonlinux') || contains(matrix.container, 'centos') || contains(matrix.container, 'fedora')
+        if: contains(matrix.container, 'amazonlinux') || contains(matrix.container, 'centos') || contains(matrix.container, 'fedora:33') || contains(matrix.container, 'fedora:35')
         run: |
           yum module disable -y nodejs || true
           curl -sL https://rpm.nodesource.com/setup_${{ matrix.node-version }}.x | bash -
           yum install -y git nodejs
+      - name: Install Node.js (Fedora 38)
+        if: contains(matrix.container, 'fedora:38')
+        run: dnf install -y git nodejs
       - name: Install Node.js (OpenSUSE)
         if: contains(matrix.container, 'opensuse')
         run: |
@@ -173,7 +181,9 @@ jobs:
           apt-get install -y nodejs
       - name: Install Node.js (Void)
         if: contains(matrix.container, 'void')
-        run: xbps-install -Sy git nodejs
+        run: |
+          xbps-install -Suy xbps
+          xbps-install -Sy git nodejs
       - name: Checkout
         uses: actions/checkout@v1
       - name: Verify expectations
