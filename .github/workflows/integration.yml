@@ -111,11 +111,11 @@ jobs:
             node-version: 16
             expected-family: glibc
             expected-version: 2.34
-          - name: Fedora 38 / Node.js 18
-            container: fedora:38
+          - name: Fedora 39 / Node.js 18
+            container: fedora:39
             node-version: 18
             expected-family: glibc
-            expected-version: 2.36.9000
+            expected-version: 2.37.9000
           - name: OpenSUSE 15.1 / Node.js 10
             container: opensuse/leap:15.1
             node-version: 10
@@ -150,7 +150,7 @@ jobs:
             container: ghcr.io/void-linux/void-linux:latest-thin-x86_64
             node-version: 16
             expected-family: glibc
-            expected-version: 2.32
+            expected-version: 2.36
           - name: Void musl / Node.js 16
             container: ghcr.io/void-linux/void-linux:latest-thin-x86_64-musl
             node-version: 16
@@ -163,8 +163,8 @@ jobs:
           yum module disable -y nodejs || true
           curl -sL https://rpm.nodesource.com/setup_${{ matrix.node-version }}.x | bash -
           yum install -y git nodejs
-      - name: Install Node.js (Fedora 38)
-        if: contains(matrix.container, 'fedora:38')
+      - name: Install Node.js (Fedora 39)
+        if: contains(matrix.container, 'fedora:39')
         run: dnf install -y git nodejs
       - name: Install Node.js (OpenSUSE)
         if: contains(matrix.container, 'opensuse')

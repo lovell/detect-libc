@@ -8,6 +8,8 @@ Currently supports detection of GNU glibc and MUSL libc.
 Provides asychronous and synchronous functions for the
 family (e.g. `glibc`, `musl`) and version (e.g. `1.23`, `1.2.3`).
 
+Version numbers are not guaranteed to be semver-compliant.
+
 For previous v1.x releases, please see the
 [v1](https://github.com/lovell/detect-libc/tree/v1) branch.
 
@@ -147,7 +149,7 @@ if (isNonGlibcLinuxSync()) { ... }
 
 ## Licensing
 
-Copyright 2017, 2022 Lovell Fuller
+Copyright 2017 Lovell Fuller and others.
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
