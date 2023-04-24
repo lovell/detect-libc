@@ -8,7 +8,8 @@ Currently supports detection of GNU glibc and MUSL libc.
 Provides asychronous and synchronous functions for the
 family (e.g. `glibc`, `musl`) and version (e.g. `1.23`, `1.2.3`).
 
-Version numbers are not guaranteed to be semver-compliant.
+The version numbers of libc implementations
+are not guaranteed to be semver-compliant.
 
 For previous v1.x releases, please see the
 [v1](https://github.com/lovell/detect-libc/tree/v1) branch.
