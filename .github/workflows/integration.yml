@@ -31,6 +31,11 @@ jobs:
             node-version: 16
             expected-family: musl
             expected-version: 1.2.2
+          - name: Alpine 3.18 / Node.js 20
+            container: node:20-alpine3.18
+            node-version: 20
+            expected-family: musl
+            expected-version: 1.2.4
           - name: Amazon 1 / Node.js 8
             container: amazonlinux:1
             node-version: 8
@@ -91,6 +96,11 @@ jobs:
             node-version: 16
             expected-family: glibc
             expected-version: 2.31
+          - name: Debian 12 / Node.js 20
+            container: node:20-bookworm-slim
+            node-version: 20
+            expected-family: glibc
+            expected-version: 2.36
           - name: Fedora 33 / Node.js 10
             container: fedora:33
             node-version: 10
