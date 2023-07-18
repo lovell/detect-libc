@@ -23,7 +23,8 @@
   ],
   "author": "Lovell Fuller <npm@lovell.info>",
   "contributors": [
-    "Niklas Salmoukas <niklas@salmoukas.com>"
+    "Niklas Salmoukas <niklas@salmoukas.com>",
+    "Vinícius Lourenço <vinyygamerlol@gmail.com>"
   ],
   "license": "Apache-2.0",
   "devDependencies": {
