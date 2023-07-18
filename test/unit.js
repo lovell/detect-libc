@@ -35,10 +35,10 @@ test('filesystem - file not found', async (t) => {
   t.plan(2);
 
   const filesystem = require('../lib/filesystem');
-  const fixTextureFilePath = path.join(__dirname, './fixtexture-file.txt');
+  const testFixtureFilePath = path.join(__dirname, './test-fixture.txt');
 
-  t.is(await filesystem.readFile(fixTextureFilePath), '1');
-  t.is(filesystem.readFileSync(fixTextureFilePath), '1');
+  t.is(await filesystem.readFile(testFixtureFilePath), '1');
+  t.is(filesystem.readFileSync(testFixtureFilePath), '1');
 });
 
 test('constants', (t) => {
