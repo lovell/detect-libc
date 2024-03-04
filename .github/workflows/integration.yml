@@ -36,26 +36,16 @@ jobs:
             node-version: 20
             expected-family: musl
             expected-version: 1.2.4
-          - name: Amazon 1 / Node.js 8
-            container: amazonlinux:1
-            node-version: 8
-            expected-family: glibc
-            expected-version: 2.17
-          - name: Amazon 1 / Node.js 16
-            container: amazonlinux:1
-            node-version: 16
-            expected-family: glibc
-            expected-version: 2.17
-          - name: Amazon 2 / Node.js 10
-            container: amazonlinux:2
-            node-version: 10
-            expected-family: glibc
-            expected-version: 2.26
           - name: Amazon 2 / Node.js 16
             container: amazonlinux:2
             node-version: 16
             expected-family: glibc
             expected-version: 2.26
+          - name: Amazon 2023 / Node.js 20
+            container: amazonlinux:2023
+            node-version: 20
+            expected-family: glibc
+            expected-version: 2.34
           - name: CentOS 7 / Node.js 8
             container: centos:centos7
             node-version: 8
@@ -125,7 +115,7 @@ jobs:
             container: fedora:39
             node-version: 18
             expected-family: glibc
-            expected-version: 2.37.9000
+            expected-version: 2.38
           - name: OpenSUSE 15.1 / Node.js 10
             container: opensuse/leap:15.1
             node-version: 10
@@ -141,11 +131,6 @@ jobs:
             node-version: 8
             expected-family: glibc
             expected-version: 2.19
-          - name: Ubuntu 16.04 / Node.js 16
-            container: ubuntu:16.04
-            node-version: 16
-            expected-family: glibc
-            expected-version: 2.23
           - name: Ubuntu 18.04 / Node.js 8
             container: ubuntu:18.04
             node-version: 8
@@ -160,7 +145,7 @@ jobs:
             container: ghcr.io/void-linux/void-linux:latest-thin-x86_64
             node-version: 16
             expected-family: glibc
-            expected-version: 2.36
+            expected-version: 2.38
           - name: Void musl / Node.js 16
             container: ghcr.io/void-linux/void-linux:latest-thin-x86_64-musl
             node-version: 16
