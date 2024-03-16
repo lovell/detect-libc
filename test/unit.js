@@ -66,6 +66,22 @@ test('linux - glibc family detected via ldd', async (t) => {
   t.false(await libc.isNonGlibcLinux());
 });
 
+test('linux - glibc family detected via ldd (libc)', async (t) => {
+  t.plan(2);
+
+  const libc = proxyquire('../', {
+    './process': {
+      isLinux: () => true
+    },
+    './filesystem': {
+      readFile: () => Promise.resolve('TEXTDOMAIN=libc')
+    }
+  });
+
+  t.is(await libc.family(), libc.GLIBC);
+  t.false(await libc.isNonGlibcLinux());
+});
+
 test('linux - glibc familySync detected via ldd', async (t) => {
   t.plan(2);
 
@@ -75,6 +91,22 @@ test('linux - glibc familySync detected via ldd', async (t) => {
     },
     './filesystem': {
       readFileSync: () => 'bunch-of-text GLIBC'
+    }
+  });
+
+  t.is(libc.familySync(), libc.GLIBC);
+  t.false(libc.isNonGlibcLinuxSync());
+});
+
+test('linux - glibc familySync detected via ldd (libc)', async (t) => {
+  t.plan(2);
+
+  const libc = proxyquire('../', {
+    './process': {
+      isLinux: () => true
+    },
+    './filesystem': {
+      readFileSync: () => 'TEXTDOMAIN=libc'
     }
   });
 
@@ -488,6 +520,22 @@ test('linux - glibc version detected via filesystem', async (t) => {
   t.is(await libc.version(), '1.23');
 });
 
+test('linux - glibc version detected via filesystem (libc)', async (t) => {
+  t.plan(1);
+
+  const out = '--vers | --versi | --versio | --version)\necho \'ldd (GNU libc) 2.39\'';
+  const libc = proxyquire('../', {
+    './process': {
+      isLinux: () => true
+    },
+    './filesystem': {
+      readFile: () => Promise.resolve(out)
+    }
+  });
+
+  t.is(await libc.version(), '2.39');
+});
+
 test('linux - glibc version detected via filesystemSync', async (t) => {
   t.plan(1);
 
@@ -502,6 +550,22 @@ test('linux - glibc version detected via filesystemSync', async (t) => {
   });
 
   t.is(libc.versionSync(), '1.23');
+});
+
+test('linux - glibc version detected via filesystemSync (libc)', async (t) => {
+  t.plan(1);
+
+  const out = '--vers | --versi | --versio | --version)\necho \'ldd (GNU libc) 2.39\'';
+  const libc = proxyquire('../', {
+    './process': {
+      isLinux: () => true
+    },
+    './filesystem': {
+      readFileSync: () => out
+    }
+  });
+
+  t.is(libc.versionSync(), '2.39');
 });
 
 test('linux - glibc version detected via child process', async (t) => {
