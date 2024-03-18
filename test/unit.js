@@ -58,23 +58,7 @@ test('linux - glibc family detected via ldd', async (t) => {
       isLinux: () => true
     },
     './filesystem': {
-      readFile: () => Promise.resolve('bunch-of-text GLIBC')
-    }
-  });
-
-  t.is(await libc.family(), libc.GLIBC);
-  t.false(await libc.isNonGlibcLinux());
-});
-
-test('linux - glibc family detected via ldd (libc)', async (t) => {
-  t.plan(2);
-
-  const libc = proxyquire('../', {
-    './process': {
-      isLinux: () => true
-    },
-    './filesystem': {
-      readFile: () => Promise.resolve('TEXTDOMAIN=libc')
+      readFile: () => Promise.resolve('# This file is part of the GNU C Library.')
     }
   });
 
@@ -90,23 +74,7 @@ test('linux - glibc familySync detected via ldd', async (t) => {
       isLinux: () => true
     },
     './filesystem': {
-      readFileSync: () => 'bunch-of-text GLIBC'
-    }
-  });
-
-  t.is(libc.familySync(), libc.GLIBC);
-  t.false(libc.isNonGlibcLinuxSync());
-});
-
-test('linux - glibc familySync detected via ldd (libc)', async (t) => {
-  t.plan(2);
-
-  const libc = proxyquire('../', {
-    './process': {
-      isLinux: () => true
-    },
-    './filesystem': {
-      readFileSync: () => 'TEXTDOMAIN=libc'
+      readFileSync: () => '# The GNU C Library is free software; you can redistribute it and/or'
     }
   });
 
