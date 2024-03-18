@@ -145,7 +145,7 @@ jobs:
             container: ghcr.io/void-linux/void-linux:latest-thin-x86_64
             node-version: 16
             expected-family: glibc
-            expected-version: 2.38
+            expected-version: 2.39
           - name: Void musl / Node.js 16
             container: ghcr.io/void-linux/void-linux:latest-thin-x86_64-musl
             node-version: 16
