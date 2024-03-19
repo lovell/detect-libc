@@ -557,7 +557,7 @@ test('linux - glibc version detected via filesystemSync (libc)', async (t) => {
   t.is(libc.versionSync(), '2.39');
 });
 
-test('linux - glibc version detected via filesystemSync (void linux)', (t) => {
+test('linux - libc version not detected via filesystemSync (void linux musl)', (t) => {
   t.plan(1);
 
   const out = 'startlibc_startGNU AS 2.35.1';
