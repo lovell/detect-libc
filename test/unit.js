@@ -504,7 +504,7 @@ test('linux - glibc version detected via filesystem (libc)', async (t) => {
   t.is(await libc.version(), '2.39');
 });
 
-test('linux - glibc version detected via filesystem (void linux)', async (t) => {
+test('linux - libc version not detected via filesystem (void linux musl)', async (t) => {
   t.plan(1);
 
   const out = 'startlibc_startGNU AS 2.35.1';
