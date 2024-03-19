@@ -504,6 +504,27 @@ test('linux - glibc version detected via filesystem (libc)', async (t) => {
   t.is(await libc.version(), '2.39');
 });
 
+test('linux - glibc version detected via filesystem (void linux)', async (t) => {
+  t.plan(1);
+
+  const out = 'startlibc_startGNU AS 2.35.1';
+  const libc = proxyquire('../', {
+    './process': {
+      isLinux: () => true,
+      getReport: () => ({})
+    },
+    './filesystem': {
+      readFile: () => Promise.resolve(out)
+    },
+    child_process: {
+      exec: (_c, cb) => cb(null, out),
+      execSync: () => out
+    }
+  });
+
+  t.is(await libc.version(), null);
+});
+
 test('linux - glibc version detected via filesystemSync', async (t) => {
   t.plan(1);
 
@@ -534,6 +555,27 @@ test('linux - glibc version detected via filesystemSync (libc)', async (t) => {
   });
 
   t.is(libc.versionSync(), '2.39');
+});
+
+test('linux - glibc version detected via filesystemSync (void linux)', (t) => {
+  t.plan(1);
+
+  const out = 'startlibc_startGNU AS 2.35.1';
+  const libc = proxyquire('../', {
+    './process': {
+      isLinux: () => true,
+      getReport: () => ({})
+    },
+    './filesystem': {
+      readFile: () => Promise.resolve(out)
+    },
+    child_process: {
+      exec: (_c, cb) => cb(null, out),
+      execSync: () => out
+    }
+  });
+
+  t.is(libc.versionSync(), null);
 });
 
 test('linux - glibc version detected via child process', async (t) => {
