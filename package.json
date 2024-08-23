@@ -14,18 +14,18 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/lovell/detect-libc"
+    "url": "git://github.com/AmeerArsala/detect-libc"
   },
   "keywords": [
     "libc",
     "glibc",
     "musl"
   ],
-  "author": "Lovell Fuller <npm@lovell.info>",
+  "author": "Ameer Arsala <ameer.arsala03@gmail.com>",
   "contributors": [
+    "Lovell Fuller <npm@lovell.info>",
     "Niklas Salmoukas <niklas@salmoukas.com>",
-    "Vinícius Lourenço <vinyygamerlol@gmail.com>",
-    "Ameer Arsala <ameer.arsala03@gmail.com>"
+    "Vinícius Lourenço <vinyygamerlol@gmail.com>"
   ],
   "license": "Apache-2.0",
   "devDependencies": {
