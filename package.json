@@ -1,6 +1,6 @@
 {
-  "name": "@ameerarsala/detect-libc",
-  "version": "2.0.4-0",
+  "name": "detect-libc",
+  "version": "2.0.3",
   "description": "Node.js module to detect the C standard library (libc) implementation family and version",
   "main": "lib/detect-libc.js",
   "files": [
@@ -14,16 +14,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/AmeerArsala/detect-libc"
+    "url": "git://github.com/lovell/detect-libc"
   },
   "keywords": [
     "libc",
     "glibc",
     "musl"
   ],
-  "author": "Ameer Arsala <ameer.arsala03@gmail.com>",
+  "author": "Lovell Fuller <npm@lovell.info>",
   "contributors": [
-    "Lovell Fuller <npm@lovell.info>",
     "Niklas Salmoukas <niklas@salmoukas.com>",
     "Vinícius Lourenço <vinyygamerlol@gmail.com>"
   ],
