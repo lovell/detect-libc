@@ -1,7 +1,5 @@
 # detect-libc
 
-**IF YOU ARE READING THIS, YES. THIS ONE IS THE ONE THAT FIXES THE CLOUDFLARE ISSUE. HAVE FUN TESTING IN DEV!**
-
 Node.js module to detect details of the C standard library (libc)
 implementation provided by a given Linux system.
 
