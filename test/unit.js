@@ -12,7 +12,7 @@ const proxyquire = require('proxyquire')
 const filePermissionError = new Error('Read error');
 filePermissionError.code = 'ERR_ACCESS_DENIED';
 
-test('filesystem - file found', async (t) => {
+test('filesystem - file not found', async (t) => {
   t.plan(2);
 
   const filesystem = require('../lib/filesystem');
@@ -31,14 +31,87 @@ test('filesystem - file found', async (t) => {
   }
 });
 
-test('filesystem - file not found', async (t) => {
+test('filesystem - file found', async (t) => {
   t.plan(2);
 
   const filesystem = require('../lib/filesystem');
   const testFixtureFilePath = path.join(__dirname, './test-fixture.txt');
 
-  t.is(await filesystem.readFile(testFixtureFilePath), '1');
-  t.is(filesystem.readFileSync(testFixtureFilePath), '1');
+  t.is((await filesystem.readFile(testFixtureFilePath)).toString(), '1');
+  t.is(filesystem.readFileSync(testFixtureFilePath).toString(), '1');
+});
+
+test('elf - too small', (t) => {
+  t.plan(1);
+  const { interpreterPath } = require('../lib/elf');
+
+  t.is(interpreterPath(Buffer.alloc(10)), null);
+});
+
+test('elf - not elf', (t) => {
+  t.plan(1);
+  const { interpreterPath } = require('../lib/elf');
+
+  t.is(interpreterPath(Buffer.alloc(64)), null);
+});
+
+test('elf - valid elf but not 64-bit', (t) => {
+  t.plan(1);
+  const { interpreterPath } = require('../lib/elf');
+
+  const elf32Header = Buffer.alloc(64);
+  elf32Header[0] = 0x7F;
+  elf32Header[1] = 0x45;
+  elf32Header[2] = 0x4C;
+  elf32Header[3] = 0x46;
+  elf32Header[4] = 0x01; // 32-bit
+  t.is(interpreterPath(elf32Header), null);
+});
+
+test('elf - valid elf but not little-endian', (t) => {
+  t.plan(1);
+  const { interpreterPath } = require('../lib/elf');
+
+  const elf64Header = Buffer.alloc(64);
+  elf64Header[0] = 0x7F;
+  elf64Header[1] = 0x45;
+  elf64Header[2] = 0x4C;
+  elf64Header[3] = 0x46;
+  elf64Header[4] = 0x02; // 64-bit
+  elf64Header[5] = 0x02; // Big-endian
+  t.is(interpreterPath(elf64Header), null);
+});
+
+test('elf - valid elf without PT_INTERP', (t) => {
+  t.plan(1);
+  const { interpreterPath } = require('../lib/elf');
+
+  const elf64Header = Buffer.alloc(64);
+  elf64Header[0] = 0x7F;
+  elf64Header[1] = 0x45;
+  elf64Header[2] = 0x4C;
+  elf64Header[3] = 0x46;
+  elf64Header[4] = 0x02; // 64-bit
+  elf64Header[5] = 0x01; // Little-endian
+  t.is(interpreterPath(elf64Header), null);
+});
+
+test('elf - glibc PT_INTERP', (t) => {
+  t.plan(1);
+  const { interpreterPath } = require('../lib/elf');
+  const { readFileSync } = require('../lib/filesystem');
+
+  const elf64Header = readFileSync(path.join(__dirname, './test-fixture-glibc'));
+  t.is(interpreterPath(elf64Header), '/lib64/ld-linux-x86-64.so.2');
+});
+
+test('elf - musl PT_INTERP', (t) => {
+  t.plan(1);
+  const { interpreterPath } = require('../lib/elf');
+  const { readFileSync } = require('../lib/filesystem');
+
+  const elf64Header = readFileSync(path.join(__dirname, './test-fixture-musl'));
+  t.is(interpreterPath(elf64Header), '/lib/ld-musl-x86_64.so.1');
 });
 
 test('constants', (t) => {
@@ -48,6 +121,57 @@ test('constants', (t) => {
 
   t.is(libc.GLIBC, 'glibc');
   t.is(libc.MUSL, 'musl');
+});
+
+test('linux - glibc family detected via interpreter', async (t) => {
+  t.plan(2);
+
+  const libc = proxyquire('../', {
+    './process': {
+      isLinux: () => true
+    },
+    './elf': {
+      interpreterPath: () => '/lib64/ld-linux-x86-64.so.2'
+    }
+  });
+
+  t.is(await libc.family(), libc.GLIBC);
+  t.false(await libc.isNonGlibcLinux());
+});
+
+test('linux - musl family detected via interpreter', async (t) => {
+  t.plan(2);
+
+  const libc = proxyquire('../', {
+    './process': {
+      isLinux: () => true
+    },
+    './elf': {
+      interpreterPath: () => '/lib/ld-musl-x86_64.so.1'
+    }
+  });
+
+  t.is(await libc.family(), libc.MUSL);
+  t.true(await libc.isNonGlibcLinux());
+});
+
+test('linux - no family detected via interpreter', async (t) => {
+  t.plan(2);
+
+  const libc = proxyquire('../', {
+    './process': {
+      isLinux: () => true
+    },
+    './elf': {
+      interpreterPath: () => '/lib/ld-unknown-aarch64.so.1'
+    },
+    './filesystem': {
+      readFile: () => Promise.resolve('# This file is part of the GNU C Library.')
+    }
+  });
+
+  t.is(await libc.family(), libc.GLIBC);
+  t.false(await libc.isNonGlibcLinux());
 });
 
 test('linux - glibc family detected via ldd', async (t) => {
@@ -66,7 +190,23 @@ test('linux - glibc family detected via ldd', async (t) => {
   t.false(await libc.isNonGlibcLinux());
 });
 
-test('linux - glibc familySync detected via ldd', async (t) => {
+test('linux - musl familySync detected via interpreter', (t) => {
+  t.plan(2);
+
+  const libc = proxyquire('../', {
+    './process': {
+      isLinux: () => true
+    },
+    './elf': {
+      interpreterPath: () => '/lib/ld-musl-x86_64.so.1'
+    }
+  });
+
+  t.is(libc.familySync(), libc.MUSL);
+  t.true(libc.isNonGlibcLinuxSync());
+});
+
+test('linux - glibc familySync detected via ldd', (t) => {
   t.plan(2);
 
   const libc = proxyquire('../', {
