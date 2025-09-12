@@ -1,0 +1,41 @@
+name: CI
+on:
+  - push
+  - pull_request
+permissions: {}
+jobs:
+  unit:
+    permissions:
+      contents: read
+    runs-on: ubuntu-24.04
+    name: Node.js ${{ matrix.node-version }}
+    strategy:
+      matrix:
+        node-version:
+          - '10'
+          - '12'
+          - '14'
+          - '16'
+          - '18'
+          - '20'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: npm install
+      - run: npm test
+  publish:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs:
+      - unit
+    permissions:
+      contents: read
+      id-token: write
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - run: npm publish --tag=${{ contains(github.ref, '-rc') && 'next' || 'latest' }}

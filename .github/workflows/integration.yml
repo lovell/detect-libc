@@ -2,11 +2,14 @@ name: Integration tests
 on:
   - push
   - pull_request
+permissions: {}
 jobs:
   integration:
+    permissions:
+      contents: read
     name: ${{ matrix.name }}
     container: ${{ matrix.container }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
