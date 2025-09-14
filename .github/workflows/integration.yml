@@ -4,7 +4,7 @@ on:
   - pull_request
 permissions: {}
 jobs:
-  integration:
+  integration-linux:
     permissions:
       contents: read
     name: ${{ matrix.name }}
@@ -178,6 +178,29 @@ jobs:
         run: |
           export EXPECTED="${{ matrix.expected-family }} ${{ matrix.expected-version }}"
           export ACTUAL="$(node ./test/integration.js)"
+          echo "Expected: $EXPECTED"
+          echo "Actual: $ACTUAL"
+          test "$EXPECTED" = "$ACTUAL"
+  integration-nonlinux:
+    permissions:
+      contents: read
+    name: ${{ matrix.runs-on }}
+    runs-on: ${{ matrix.runs-on }}
+    strategy:
+      fail-fast: false
+      matrix:
+        runs-on:
+          - macos-14
+          - windows-2022
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - shell: bash
+        run: |
+          EXPECTED="unknown-family unknown-version"
+          ACTUAL="$(node ./test/integration.js)"
           echo "Expected: $EXPECTED"
           echo "Actual: $ACTUAL"
           test "$EXPECTED" = "$ACTUAL"

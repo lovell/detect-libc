@@ -24,6 +24,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - run: npm install
+      - run: cd node_modules/browserslist && npm install baseline-browser-mapping@2.8.4-beta # https://github.com/browserslist/browserslist/issues/904
       - run: npm test
   publish:
     if: startsWith(github.ref, 'refs/tags/v')
