@@ -1,6 +1,6 @@
 {
   "name": "detect-libc",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "description": "Node.js module to detect the C standard library (libc) implementation family and version",
   "main": "lib/detect-libc.js",
   "files": [
@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/lovell/detect-libc"
+    "url": "git://github.com/lovell/detect-libc.git"
   },
   "keywords": [
     "libc",
