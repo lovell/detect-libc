@@ -1,3 +1,8 @@
+## <small>2.1.2 (2025-10-05)</small>
+
+* Add semi-automated changelog #32 ([a950b06](https://github.com/lovell/detect-libc/commit/a950b06)), closes [#32](https://github.com/lovell/detect-libc/issues/32)
+* Ensure Node.js 10 and 12 can use async file-based detection methods (#33) ([a418065](https://github.com/lovell/detect-libc/commit/a418065)), closes [#33](https://github.com/lovell/detect-libc/issues/33)
+
 ## <small>2.1.1 (2025-09-24)</small>
 
 * Ensure Node.js 10 and 12 can use file-based detection methods (#30) ([e64be76](https://github.com/lovell/detect-libc/commit/e64be76)), closes [#30](https://github.com/lovell/detect-libc/issues/30)
